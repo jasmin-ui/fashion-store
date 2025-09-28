@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style8.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Container */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+            margin-top: 120px;
+        }
+
+        /* Filter - Left Sidebar */
+        #closeBtn {
+            display: none;
+        }
+
+        .filter {
+            position: sticky;
+            top: 0;
+            flex: 1;
+            max-width: 250px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fdfdfd;
+            height: fit-content;
+        }
+
+        .filter-btn {
+            position: fixed;
+            top: 100px;
+            right: 0;
+            padding: 10px 15px;
+            background: #e91e63;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+            display: none;
+
+        }
+
+
+        /* Products - Right Section */
+        .products {
+            flex: 3;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Single Product Card */
+        .product-card {
+            flex: 1 1 200px;
+            /* minimum width 200px */
+            max-width: 250px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            text-align: center;
+            height: 450px;
+            margin-top: 10px;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 50px 20px;
+                margin-top: 120px;
+                /* filter upar, products niche */
+            }
+
+            .filter-btn {
+                display: block;
+
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+            }
+
+            .filter-content {
+                padding-bottom: 15px;
+                -webkit-overflow-scrolling: touch;
+                box-sizing: border-box;
+                flex: 1;
+                height: 100vh;
+            }
+
+            .filter {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                transition: right 1s;
+                z-index: 1000;
+                top: 10%;
+                padding: 40px 25px;
+                max-width: 80%;
+                overflow-y: auto;
+                height: 100vh;
+                box-shadow: -6px 1px 10px rgba(0, 0, 0, 0.2);
+
+            }
+
+            .filter.active {
+                right: 0;
+            }
+
+            #closeBtn {
+                display: block;
+                padding: 5px;
+            }
+
+            .product-card img {
+                height: 200px;
+
+            }
+
+            .products {
+                justify-content: center;
+                /* products center me aa jayenge */
+            }
+
+            .product-card {
+                flex: 1 1 45%;
+                /* 2 products ek row me approx */
+                max-width: 100%;
+                height: 350px;
+                margin-bottom: 20px;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav">
+            <h1 class="logo">Vela</h1>
+            <div class="nav-links">
+                <ul>
+                    <li>Home</li>
+                    <li>Shop</li>
+                    <li>Categories</li>
+                    <li>About</li>
+                    <li>contact</li>
+                </ul>
+            </div>
+            <div class="nav-search">
+                <div class="search-icon" id="searchicon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <input type="search" id="search" placeholder="Search Products...">
+                <div class="remove-icon" id="remove">
+                    <i class="fa-solid fas fa-times"></i>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger">&#9776;</div>
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="#">🏠 Home</a>
+                <a href="#">🛍️ Shop</a>
+                <a href="#">📂 Category</a>
+                <a href="#">ℹ️ About</a>
+                <a href="#">📞 Contact</a>
+                <a href="#">👤 Profile</a>
+                <hr>
+                <a href="#">Login / Signup</a>
+                <a href="#">❤️ Wishlist</a>
+                <a href="#">🔥 Today’s Deals / Offers</a>
+                <a href="#">🎟️ Coupons / Discounts</a>
+                <a href="#">💬 Help & Support</a>
+            </div>
+
+
+            <div class="icon">
+                <div class="cart-icon">
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <span class="cart-count">0</span>
+                    <div class="mini-cart">
+                        <!---- <p class="empty-msg">Your cart is empty</p>--->
+                        <div class="cart-item">
+                            <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRxoyvqvZP1winHZl_lLnBpt-W_UkRdaKTIDtTrfBFXHc0FGqCXaGP7bpPtI-Bkn6EH5FffJhCHvsBOsf0A4kDI_4HAbfKsx4RPQUd2vPnXOJGFiFi71nBnmQ&usqp=CAc"
+                                alt="Product">
+                            <div class="item-details">
+                                <p class="item-name">Roberto Cavalli Gemma Di Paradiso Perfume</p>
+                                <div class="selected">
+                                    <div class="option-box">
+                                        <label for="size">Size:</label>
+                                        <select id="size">
+                                            <option value="1">Free Size</option>
+                                            <option value="2">50ml</option>
+                                            <option value="3">300ml</option>
+                                        </select>
+                                    </div>
+                                    <div class="option-box">
+                                        <label for="qty">Qty:</label>
+                                        <select id="qty">
+                                            <option value="">1</option>
+                                            <option value="">2</option>
+                                            <option value="">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <p class="total">Total: ₹1200</p>
+                                <div class="cart-buttons">
+                                    <button class="view-cart">View Cart</button>
+                                    <button class="checkout">Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="mini-profile">
+                        <p class="text2">👤 Welcome, Guest!</p>
+                        <a href="#">Login / Signup</a>
+                        <a href="#">🛒 View Cart</a>
+                        <a href="#">❤️ Wishlist</a>
+                        <a href="#">🔥 Today’s Deals / Offers</a>
+                        <a href="#">🎟️ Coupons / Discounts</a>
+                        <a href="#">🏠 Saved Addresses</a>
+                        <a href="#">💬 Help & Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="category-bar">
+            <a href="#">Women</a>
+            <a href="#">Men</a>
+            <a href="#">Kids</a>
+            <a href="#">jewellery</a>
+            <a href="#">Footwear</a>
+            <a href="#">Beauty</a>
+            <a href="#">Accessories</a>
+            <a href="#">Men</a>
+            <a href="#">Kids</a>
+            <a href="#">jewellery</a>
+            <a href="#">Footwear</a>
+            <a href="#">Beauty</a>
+            <a href="#">Accessories</a>
+            <a>Sale</a>
+        </div>
+    </header>
+    <main>
+        <button class="filter-btn" ondlick="openFilter">filter()</button>
+        <div class="container">
+
+            <!-- Left Filter Section -->
+            <div class="filter">
+                <div class="header">
+                    <h3>Filter Products</h3>
+                    <button id="closeBtn">X</button>
+                </div>
+                <!-- Category -->
+                <div class="filter-content">
+                    <h4>Category</h4>
+                    <label><input type="checkbox"> Shirts</label>
+                    <label><input type="checkbox"> Dresses</label>
+                    <label><input type="checkbox"> Jeans</label>
+                    <label><input type="checkbox"> Shoes</label>
+                    <label><input type="checkbox"> Bags</label>
+                    <hr>
+
+                    <!-- Gender -->
+                    <h4>Gender</h4>
+                    <label><input type="checkbox"> Men</label>
+                    <label><input type="checkbox"> Women</label>
+                    <label><input type="checkbox"> Kids</label>
+                    <hr>
+
+                    <!-- Size -->
+                    <h4>Size</h4>
+                    <label><input type="checkbox"> S</label>
+                    <label><input type="checkbox"> M</label>
+                    <label><input type="checkbox"> L</label>
+                    <label><input type="checkbox"> XL</label>
+                    <hr>
+
+                    <!-- Color -->
+                    <h4>Color</h4>
+                    <label><input type="checkbox"> Red</label>
+                    <label><input type="checkbox"> Blue</label>
+                    <label><input type="checkbox"> Black</label>
+                    <label><input type="checkbox"> White</label>
+                    <hr>
+
+                    <!-- Price -->
+                    <h4>Price</h4>
+                    <label><input type="checkbox"> Below ₹500</label>
+                    <label><input type="checkbox"> ₹500 - ₹1000</label>
+                    <label><input type="checkbox"> Above ₹1000</label>
+                    <hr>
+
+                    <!-- Brand -->
+                    <h4>Brand</h4>
+                    <label><input type="checkbox"> Nike</label>
+                    <label><input type="checkbox"> Adidas</label>
+                    <label><input type="checkbox"> Zara</label>
+                    <label><input type="checkbox"> H&M</label>
+                    <hr>
+
+                    <!-- Discount -->
+                    <h4>Discount</h4>
+                    <label><input type="checkbox"> 10% or more</label>
+                    <label><input type="checkbox"> 20% or more</label>
+                    <label><input type="checkbox"> 50% or more</label>
+
+                    <hr>
+                    <h3>Price</h3>
+                    <label><input type="checkbox"> Below ₹500</label>
+                    <label><input type="checkbox"> ₹500 - ₹1000</label>
+                    <label><input type="checkbox"> Above ₹1000</label>
+                    <hr>
+                    <h3>Rating</h3>
+                    <label><input type="checkbox"> ⭐⭐ & above</label>
+                    <label><input type="checkbox"> ⭐⭐⭐ & above</label>
+                    <label><input type="checkbox"> ⭐⭐⭐⭐ & above</label>
+                    <hr>
+                    <h3>Price</h3>
+                    <label><input type="checkbox"> Below ₹500</label>
+                    <label><input type="checkbox"> ₹500 - ₹1000</label>
+                    <label><input type="checkbox"> Above ₹1000</label>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Right Products Section -->
+            <div class="products">
+                <!-- Repeat these product cards 20–30 times -->
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRhG_bvix_DWZjBA2BvXTIe_xx_MGamuaUsDTCLUwtE5IhRYhLYG4jWjGzPODETC2Msm4ySniEC-kjiqJWxNoiq8T68EIpgVCZPEQ1_F08dpR7Shp57bk3m"
+                        alt="Product 1">
+                    <h4>Red Dress</h4>
+                    <p class="price">₹799</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="101">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTafuAidOxNlAKH2CPDdsFgHHexWqa5Ty7NWMc91wox-GgfrQ895ZQkAg0gLkEf2LuPQ6s_sJtiaEvnoFda9Hm8WxQuqR0kN3MWkzn6LVDlOGn9ZI5GKJyMQw&usqp=CAc"
+                        alt="Product 2">
+                    <h4>Blue Shirt</h4>
+                    <p class="price">₹499</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="102">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRvNccSxQp4yfsSKAo0my7SLX4yBvTv2YVPerpNkB7ReMdVyujxUt0o_OZ67-1JJpP-j12A8HjeLOc10f0rvonrNBpu6TKYb1nxUlalQT6ed7tTPQfXMwHXNw"
+                        alt="Product 3">
+                    <h4>Black Jeans</h4>
+                    <p class="price">₹999</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="103">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSPIo9xabFm2QsPacze6jGlruWTzW2ygtS_hrf53lN2AE-2LbDuZaNR5K-Y3BkYVXuX1CBj96BL4ppNnHJzqKVAfHMxIzpfP-Du7oiYPwU"
+                        alt="Product 4">
+                    <h4>White Sneakers</h4>
+                    <p class="price">₹1199</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="104">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRWADshy_hZv9EScSJL4GUREr5FGgGmhvO-XBhV1itK3XW7aOgxrqwfDmvxs2tiLZac-CpwpWDF-MJPIEiBPSdqSBMlk6E8w135CbEugN_t1c-cjQzjsRflAg"
+                        alt="Product 5">
+                    <h4>Green Top</h4>
+                    <p class="price">₹699</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="105">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRV4k-t1KSxa-hiCwYBkHwreY4coSxbYLYTtQ81129mw9DPJz4CghQPysx0ZNduyGIMaRQASWLCBdNH3nsTM-qFkNLKOFKiGy60HQjJYbaNNpT22I5YmwRC7RE"
+                        alt="Product 6">
+                    <h4>Yellow Skirt</h4>
+                    <p class="price">₹799</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="106">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRRpXjDuulUQNZnzxRtSqVyzVB_Ih1U0eeRVR4NhBmRzgYB1LlmZ6jJNxRVKjtxef2ED7gjDPQypPyH90fJTx9oRXrULk5032QeoP9KkV46IABItsq2bN1Lzw"
+                        alt="Product 7">
+                    <h4>Brown Bag</h4>
+                    <p class="price">₹1299</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="107">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS0mXh4zun8p9qqCSFR0XNDxMvAqC5rzUGM97gbMDzu8BehreixGfDvGumwDxekxBlmbe4rqzNjTqPZx0NFbkD9iY6UL8GBwGoT2pHzzpVvn2cBzTyEv0PC"
+                        alt="Product 8">
+                    <h4>Purple Jacket</h4>
+                    <p class="price">₹1499</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="108">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ8_nOjXgufAVlRvudz0MXfo5wxID-JMRX97IFwySmH_lR0x5mA5_EDI3ZB-lBJ0frOaeaAtNhqgvqWLtuQA5wakln3qzThvkV4C69vKk1Xmlp1g1LnjICnEw"
+                        alt="Product 9">
+                    <h4>Orange Cap</h4>
+                    <p class="price">₹299</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="109">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTH6Fh0DamVUzsj6VGy02P0dW5REIupuoL0iNS_uOgiCc6qF8UGMtum8LkcqKeFdcaEfZylrXYlJy8yTV_DnbqEThXAM_gHLFdPiP5Kvx0Pk6chmUNRZwo0Jw"
+                        alt="Product 10">
+                    <h4>Grey Hoodie</h4>
+                    <p class="price">₹1099</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="110">Add to Cart</button>
+                </div>
+
+                <!-- Add more up to 20–30 products -->
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTGMX9BkKMYUJ8WotGXnxAqIFMhPuebkL4I58-2Ed2p2we0QvnKWL_UpU7abW7bzI29lfJUw1RZo1Oi-nmHkZbW6wY9Ei-vu5YsO4iOG8VROj_2GEzJ5qE5mQ"
+                        alt="Product 11">
+                    <h4>Pink Blouse</h4>
+                    <p class="price">₹699</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="111">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR4eCZFCDmuT48PyN9bYq2WFU7yuqaJM5gzvjFldhO9awwCxQpMvliFj_XME8xQBsiWAMb_XuqoNDXod7fMDEccatbo0MIb2tmZmGOw-kkKw3lSPr350lr8-ONE"
+                        alt="Product 12">
+                    <h4>Denim Shorts</h4>
+                    <p class="price">₹799</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="112">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ5F8KwghOZu2s7EeEowHZdV0w7Q3IKmKcpxpmmOKJgYV7q-bXGYpE3IMLdZUMWmYcxwYkcfoJ66_q2_M9j-Bv-zpQdhsecN3S2tDETIizGeyQvTAOwTkK-NQ"
+                        alt="Product 13">
+                    <h4>Leather Belt</h4>
+                    <p class="price">₹499</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="113">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTXjEBHMEXNyPQHfeYOM7VCx6Og0c_u69xiPAt3BINw-_Z0G2SLXa68kSO7HmCERlOVWMsLMF2iUUgr31nEbx34900SFLpPM-vQaKyFhgADV3vn1EdUaPGb"
+                        alt="Product 14">
+                    <h4>Striped T-Shirt</h4>
+                    <p class="price">₹399</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="114">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRl-x3AmtwC0KifS6Dm5bCj402toFLlJR3GRUNUjcmA5Ub-x2ZMmrL1UjnIokO6phaOwYikdwWp0PFu7va9SkILW2r6_7hibHF7HvW-det99J2JmLKmZqwrCQ"
+                        alt="Product 15">
+                    <h4>Beige Pants</h4>
+                    <p class="price">₹899</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="115">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRUuuAIOex3IBW6TdvOQN561U36vTSzWvnNHgKEt41FsfUNQhrOoSJKhcCq7b_b0dzGHGOYCwt7x6NfMkXZqEXxMZB0agzJOMcew46U2X8oxZbi7IUyo9JT"" alt="
+                        Product 16">
+                    <h4>Floral Dress</h4>
+                    <p class="price">₹1199</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="116">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQNJXT3TPDs83vdEOVjMZ6Nd_A7-tU2ms4VwARo0K6o2QgUEVunbDdKjXeq1wqGHFY7U33o6qPuqLjrU3r4enhfUoREFdgMhLHEO9NDOchP1vW2O0o32b77"
+                        alt="Product 17">
+                    <h4>Red Sneakers</h4>
+                    <p class="price">₹1299</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="117">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTByXW_k-mGwb2htWocM92h7zbPeJfS4yxJUy9kJ7Aut836rPYVA1003yx9P_iY4TeJ8PYVseo-2OvVtwrYnN8iRDoozVNWG_-VZVOGXedI"
+                        alt="Product 18">
+                    <h4>Black Hat</h4>
+                    <p class="price">₹399</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="118">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ6SzicwsBDoHQkreUi6nIhxnIo4Ai0F2pC48ZbP0F1W60_BJYqlUK_Po7cj7fgF0yRFryfiVN1qPQw8PGt_0X9VMhuS1NILhsVvnaGWbp3uWKyHE5i44kwRA"
+                        alt="Product 19">
+                    <h4>Blue Jacket</h4>
+                    <p class="price">₹1499</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="119">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRWTMZJ592j5o5cLI1UdIelqCG45QareUJg7HVIPe5lERM2UYcOdTU1xG8M4JbQbZn7NmFRgP-6O5HGgNbTwR-eLzAyHJ32duzuu3Efa2R-9NafU0iBNXuC"
+                        alt="Product 20">
+                    <h4>White Trousers</h4>
+                    <p class="price">₹999</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="120">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRh0PlBTsGY0qWmCUtNct0CEcotfjbmXWt3MMiTQz8Ot2YJceCNGk8xd063YLJ8zLgMyOvTz1J2QQC44MayT5zXDA0X23AILB0ZSaEtyLxqYE6S4yIcyh4S"
+                        alt="Product 21">
+                    <h4>Grey Sweater</h4>
+                    <p class="price">₹1099</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="121">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRQmjq8g-chXKdJ-lmVMHaxiha__MHrgiVnAvRWm849gc-CJK2Ihk0D9rxCvpc91mnFXwl9KhHxPurZW8yvmFNrNy8TOGSx-osMgUfAZJL7iAXCvH0cxtKS350"
+                        alt="Product 22">
+                    <h4>Orange Top</h4>
+                    <p class="price">₹699</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="122">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSHeSXE2FmmfaV8WcEKRCGtJ5MuFv5na_QrYxlMeiawfvLr8-fmzF-QfeET-vZSeWU_8CKejuAoIpqZxF0v1BH-hT6Z_Dwsofuh8OdMLRE"
+                        alt="Product 23">
+                    <h4>Brown Boots</h4>
+                    <p class="price">₹1599</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="123">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQi_fSqfcs1Vbf5FxDEDwUy5cq54K-OLhrVAdPbpMVar5xNSaZ_24i0ibQfi5qOJuGd3UkLNYmJjg6mFLLpDP4gLXnMu3AxVustoKaxygS7zMKvaBy4Aq-b"
+                        alt="Product 24">
+                    <h4>Black Skirt</h4>
+                    <p class="price">₹799</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="124">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSCE9WwCtrOHKjWhdiMbIlZtWZ9i60KN2thYxqfmDSaBrC6jdOFchvh6I_Sg3rXKJuzuQnvr-4elz6f90-_zm1Zjo7SaLmseSTEp33oMpHDXtK4eqTDLGypkw"
+                        alt="Product 25">
+                    <h4>Yellow Top</h4>
+                    <p class="price">₹599</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="125">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS4y7Dc1qvAV7RD75T34miyZPlbzGooFY2IAM6qeM2DiS3HTnoT7LlSFbAwLGMWA1CyKTn6lFMpxaGn3bVkFA6WBwLvfCaDWZpl4CdQpbc"
+                        alt="Product 26">
+                    <h4>Green Shirt</h4>
+                    <p class="price">₹699</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="126">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcR53UcOvi2_zBLwJdlkRSPAYiKzsfIqKtq6U5ose_RrQJFdQilf8B7GRMAPpb8yspPVB_RYhc7pDlgKOdvahb4nA-CIdZZ0UojNCzJfA8cn7PDBrnMT8LPKYw"
+                        alt="Product 27">
+                    <h4>Blue Dress</h4>
+                    <p class="price">₹1299</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="127">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQefdbIStbZyR8GHIhAvKM2nhV3J0LnaB89VmYqnPo0DIxtfvml8FE0zPcMUi9h_Rn8AkoDMrDNPGVlWhirTIzNW1vn2xxST82oZQz0A2Q"
+                        alt="Product 28">
+                    <h4>Red Hoodie</h4>
+                    <p class="price">₹1099</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="128">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRjhQt3nQ7V-DHKTa0Nd2mD__9Oni2NuboXEAhyhwDzyyJWSw_ef5dI327hwcGTsnatu0yuH41DXo_XRAAImxcaiOwjYiPotKDuhqCvnjo"
+                        alt="Product 29">
+                    <h4>Grey Pants</h4>
+                    <p class="price">₹899</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="129">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQX_FeEfb6q9phWzQs2jz9CSu7UZ1s87qg6saUyKmF5zcyd3w6PuVbUFXCJGRAeQ-NdPY7Gu7YwvWSgPrAkaD5ssMRK8erWKE5Ay_koBh0"
+                        alt="Product 30">
+                    <h4>Leopard Print Wide Heel</h4>
+                    <p class="price">₹1199</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="130">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSGNsLE4eDYcO-KC3Mw5b__hXHdACiUYR4hmD9dalCnCugmuyO3eTL1rLUcfJ6JCmpSo67wnKgvk0FFoFdhbvUWTnbl8dKOlXrqE2_vYnAqFPMxLXgViYbWyA"
+                        alt="Stylish Glasses">
+                    <h3>Stylish Glasses</h3>
+                    <div class="price">$59.99</div>
+                    <div class="rating">⭐⭐⭐⭐⭐</div>
+                    <button class="product-btn" data-id="131">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQ_-SIZHX3YDiBp0jKtvRVThy1I2uL-IySnHtVi2wR0IJG4tbiKh5VAWze4CLRG6A3lEaKeTMx6FSkszQucQl0BWPHa3uwL07JDMnEe8jSEj8SvHULnW1Bu"
+                        alt="Classic Watch">
+                    <h3>Classic Watch</h3>
+                    <div class="price">$39.99</div>
+                    <div class="rating">⭐⭐⭐⭐☆</div>
+                    <button class="product-btn" data-id="132">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQFcNSFB_mmxP0fDrRQ7TBGjbSwUtWsKCYbuaNxcXWVjqFEyQVyr_5tdWQJoL6TlMXnbbKjABiFmRfB0fkiYWqRDFTBQk_y0x32W_BReted"
+                        alt="Men's Jeans">
+                    <h4>Denim Jeans</h4>
+                    <p class="price">₹1,499</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="133">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRU0lRLML0HTZthICpeKQk1t1TNbzhBQrh3ZTYUBF2_WdYgcPEGWGfz7i7m1pTquKg7H9YlOc_RiDUbdkb4bLtxXZOmLRvn16f-df_0AUi882COYBxejvo1Ag"
+                        alt="Men's Shirt">
+                    <h4>Casual Shirt</h4>
+                    <p class="price">₹999</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="134">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRx1CCHQ_Eg7e4w6uFOHchHl7b96TFb3iWtSv5TthRl8Ko6bNe4KKqRcLzssYzJ-08IyDgjGpuxdQXX3dG139k2i8BzWHJD9HhEZqtXbPep7by4QoKVcZOWVA"
+                        alt="Men's Jeans">
+                    <h4>Denim Jeans</h4>
+                    <p class="price">₹1,499</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="135">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRcLX_RkIczIcTFTpl_kAL6Bk-TyUDR55L6pqIZf1y1_RD70p-Z0l9I34tcJJ6K11RbOmEgjQGKUJoi4xOhkTGzLSOE3nYLTs00SGKGfpYD2A2kBcwdlYF2nA"
+                        alt="Women's Saree">
+                    <h4>Silk Saree</h4>
+                    <p class="price">₹2,999</p>
+                    <p class="rating">⭐⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="136">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTjPZKi2SuQ-MJMMWVQQ0rzH82s9RM2o_s2-gNaWdneOWOYmsObhzoQKxIbenIPii0Cly_AeXNmpCJjEpcN90LAHRprjCW2AjGqfyb0KLB5liEOhKfG_STv"
+                        alt="Women's Kurti">
+                    <h4>Designer Kurti</h4>
+                    <p class="price">₹799</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="137">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRnv1Kz5PQeSk7H2mRWKde1440ropYGhld0nHz1tUzyAH662ndmzU0ykFzO1AkggbfIyZv3dA2rKljZPp1XCwCkmGGneH9X2JfaqJAvvYGkEpCFGp2fgetQuQ"
+                        alt="Men's Jacket">
+                    <h4>Winter Jacket</h4>
+                    <p class="price">₹1,899</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="138">Add to Cart</button>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQkxpy2bcKHAH0gliWM1vEyt7v9OySqJU9pfk67-g-_69bovCTVC5z0PmGm_x2YsPzSz62lJsRcxgktSKsZq-NuwiVluCAubei0G6U5R94"
+                        alt="Women's Top">
+                    <h4>Trendy Top</h4>
+                    <p class="price">₹599</p>
+                    <p class="rating">⭐⭐⭐⭐</p>
+                    <button class="product-btn" data-id="139">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcT2ca2uPNZLfP0j0EusG5u2J9MfOyym7lERvO8e0P8ur8A_SJPmdx1tgWOhoxgk8JkfHd3ZsPZgbQ8UKiEBDhooXgGlO-i1O2q5YBuZyumJUmiWOllQMkx2wA"
+                        alt="Men's T-Shirt">
+                    <h4>Graphic T-Shirt</h4>
+                    <p class="price">₹499</p>
+                    <p class="rating">⭐⭐⭐</p>
+                    <button class="product-btn" data-id="140">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="toast" id="toast">Product added to cart!</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Column 1: Brand Info -->
+            <div class="footer-col">
+                <h2 class="footer-logo">Vela</h2>
+                <p class="footer-desc">Vela – Trendy fashion for every style. Discover the latest trends and timeless
+                    classics.
+                </p>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Customer Service -->
+            <div class="footer-col">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Newsletter & Social -->
+            <div class="footer-col">
+                <h3>Subscribe</h3>
+                <p>Get the latest deals & trends</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a> <!-- Facebook -->
+                    <a href="#"><i class="fa-brands fa-square-twitter"></i></a> <!-- Twitter -->
+                    <a href="#"><i class="fa-brands fa-square-instagram"></i></a> <!-- Instagram -->
+                    <a href="#"><i class="fa-brands fa-pinterest"></i></a> <!-- Pinterest -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>© 2025 Vela. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <script src="script8.js"></script>
+    <script src="script9.js"></script>
+
+</body>
+
+</html>
